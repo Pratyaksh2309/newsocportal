@@ -4,6 +4,7 @@ import "../components/Filter.css"
 import { useEffect } from "react";
 import { useState } from "react";
 import { useMemo } from "react";
+import { useCallback } from "react";
 import "../components/ProjectCard.css";
 import {Link} from 'react-router-dom'
 
@@ -12,23 +13,25 @@ export default function Wishlist() {
   const [details, setDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
     
-    useEffect(() => {
-      setIsLoading(true);
-      api.get(process.env.REACT_APP_BACKEND_URL+'/projects/wishlist/')
-      .then((response) => {
-        console.log(response.data);
-        setDetails(response.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching wishlist:', error);
-        if (error.response && error.response.status === 401) {
-          // Redirect to login if unauthorized
-          window.location.href = '/login';
-        }
-        setIsLoading(false);
-      });
-  }, []);
+  const fetchWishlist = useCallback(() => {
+    setIsLoading(true);
+    api.get(process.env.REACT_APP_BACKEND_URL + '/projects/wishlist/')
+        .then((response) => {
+            setDetails(response.data);
+            setIsLoading(false);
+        })
+        .catch((error) => {
+            console.error('Error fetching wishlist:', error);
+            if (error.response && error.response.status === 401) {
+                window.location.href = '/login';
+            }
+            setIsLoading(false);
+        });
+}, []);
+
+useEffect(() => {
+  fetchWishlist(); // Call the memoized fetch function
+}, [fetchWishlist]);
   
   const [filterValue, setFilterValue] = useState('All');
 
@@ -164,7 +167,7 @@ export default function Wishlist() {
         {filteredProjects.map((project, index) =>(
           project.banner_image = `http://127.0.0.1:8000${project.banner_image}`,
           <div key={index}> 
-            <ProjectCard ProjectId={project.id} link={project.banner_image} title={project.title} general_category={project.general_category} isInWishlist={details.some((item) => item.id === project.id)}/>
+            <ProjectCard ProjectId={project.id} link={project.banner_image} title={project.title} general_category={project.general_category} isInWishlist={details.some((item) => item.id === project.id)} onWishlistChange = {fetchWishlist}/>
           </div>
         ))}
         </div>)}

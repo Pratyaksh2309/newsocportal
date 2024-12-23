@@ -54,6 +54,7 @@ export default function ProjectCard(props) {
           .then((res) => {
             console.log("Removed from wishlist:", res.data);
             setAdded(false);
+            props.onWishlistChange();
           })
           .catch((err) => {
             if (err.response && err.response.status === 401) {
