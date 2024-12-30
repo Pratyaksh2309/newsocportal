@@ -7,6 +7,8 @@ from django.utils import timezone
 
 from accounts.models import UserProfile
 
+from mentor_accounts.models import UserProfile2
+
 
 def default_season_name():
     now = timezone.now()
@@ -101,6 +103,44 @@ def upload_to(instance, filename):
 #                 name="mentor_unique_user_season",
 #             )
 #         ]
+
+
+class Mentor(models.Model):
+    """
+    A Mentee is the representation of a user in a season applying to projects.
+    """
+
+    user = models.OneToOneField(
+        UserProfile2,
+        on_delete=models.CASCADE,
+        help_text="The user corresponding to the mentee.",
+        unique=True,
+    )
+    season = models.TextField(default='')
+    # season = models.ForeignKey(
+    #     Season,
+    #     on_delete=models.PROTECT,
+    #     default=get_current_id,
+    #     help_text="The season to which mentee is applying for.",
+    # )
+
+    # project = models.ForeignKey(
+    #     Project,
+    #     null=True,
+    #     on_delete=models.SET_NULL,
+    #     help_text="The project that the mentee has been selected for. Is NULL if not selected yet.",
+    # )
+
+    # preferences = models.ManyToManyField(
+    #     "Project",
+    #     through="MenteePreference",
+    #     related_name="applications",
+    #     help_text="The projects that the mentee has applied to.",
+    # )
+
+
+    def __str__(self):
+        return self.user.roll_number
 
 
 class Mentee(models.Model):

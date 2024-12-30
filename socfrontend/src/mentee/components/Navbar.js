@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import wncc_logo from '../assets/wncc-logo.png';
+import wncc_logo from '../../assets/wncc-logo.png';
 import PropTypes from "prop-types";
 
 export default function Navbar(props) {

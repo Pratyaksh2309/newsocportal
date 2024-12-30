@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "accounts",
     "projects",
+    "mentor_accounts",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
