@@ -1,7 +1,7 @@
 import React from 'react';
 //import ProjectTimeline from '../components/ProjectTimeline';
 import { useState , useEffect } from 'react';
-import api from '../utils/api';
+import api from '../../utils/api';
 import ProjectTitle from '../components/ProjectTitle';
 import { useParams } from 'react-router-dom';
 
