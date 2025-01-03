@@ -47,12 +47,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         # Create user data dictionary based on the fields you expect
         if isinstance(user_instance, CustomUser):
         # Directly access the attributes of user_instance
-            user = CustomUser.objects.create_user(
-                id=user_instance.id,  # Access the username attribute
-                username=user_instance.username,
-                role=user_instance.role,          # Access the role attribute
-                password=user_instance.password,  # Access the password attribute
-            )
+            user = user_instance
         else:
             # Handle error case if user_instance is not a valid CustomUser
             raise serializers.ValidationError("Invalid user data")

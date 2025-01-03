@@ -31,7 +31,7 @@ class ProjectDetailView(APIView):
     
 
 class ProjectWishlist(APIView):
-    authentication_classes  = [CookieJWTAuthentication]
+  #  authentication_classes  = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
     permission_classes = [AllowAny]  # Allow any user to access the post request
 
@@ -51,8 +51,7 @@ class ProjectWishlist(APIView):
     
     def post(self, request):
         # logger.error('\n \n Error 6 \n \n ')
-        # print("HI")
-        print(request.user)
+
         user_profile = UserProfile.objects.get(user=request.user[0])
 
         # logger.error('\n \n Error 7 \n \n ')

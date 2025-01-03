@@ -19,8 +19,11 @@ class RollNumberBackend(BaseBackend):
                 return None  # Return None if no password matches for any user
             elif users.count() == 1:
                 user = users.first()
+                print("hi",user)
+                print(password,user.check_password(password))
                 if user.check_password(password):
                     return user  # Return the user if password is correct
+                print("bye")
                 return None  # Return None if password doesn't match
             else:
                 return None  # No user found with that username and role

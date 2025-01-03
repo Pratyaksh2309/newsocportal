@@ -55,7 +55,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 AUTHENTICATION_BACKENDS = [
     'accounts.customauth.RollNumberBackend',
- #   'django.contrib.auth.backends.ModelBackend',  # Default backend for user authentication
+    'django.contrib.auth.backends.ModelBackend',  # Default backend for user authentication
 ]
 
 INSTALLED_APPS = [

@@ -126,7 +126,7 @@ class RegisterUserView(APIView):
             
         user = CustomUser.objects.create_user(username=roll_number, password=password,role=role)
         user.is_active = False
-        user.role = role
+
         user.save()
         mutable_copy = request.POST.copy()
         mutable_copy["user"] = user.id
@@ -211,7 +211,8 @@ class CreateUserProfileView(APIView):
         return Response(data)
 
 from rest_framework.exceptions import AuthenticationFailed
-from django.contrib.auth import authenticate
+from .customauth import RollNumberBackend
+import secrets
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
@@ -219,24 +220,32 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         mutable_copy["username"] = mutable_copy["username"].lower()
 
         role = mutable_copy.get("role")
-        roll_number=mutable_copy["username"]
+        username=mutable_copy["username"]
         if not role:
             raise AuthenticationFailed("Role is required")
         password = request.data.get("password")
-
-        user = authenticate(request, username=roll_number, password=password, role=role)
-        print(user.check_password(password))
+        backend = RollNumberBackend()
+        user= backend.authenticate(request=request, username=username, password=password, role=role)
+        print(user)
         if user is None:
             raise AuthenticationFailed("Invalid roll number, password, or role")
+        print(user.is_active)
 
         # Call the parent class to obtain the JWT token (after authentication)
-        response = super().post(request, *args, **kwargs)
+        custom_token = secrets.token_urlsafe(16)  # Generate a secure random token
 
-        if "access" in response.data:
-            access_token = response.data["access"]
-            response.set_cookie(
-                key=SIMPLE_JWT["AUTH_COOKIE"], value=access_token, httponly=True
-            )
-        user = CustomUser.objects.get(username=mutable_copy["username"])
-        response.data["role"] = user.role
+        # Optionally store the token in a model for later validation or expiration
+        # Example: store token in a custom model for tracking
+        # Token.objects.create(user=user, token=custom_token, expiration_date=expiration_date)
+
+        # Response with custom token
+        response_data = {
+            "access": custom_token,  # This is your custom token instead of JWT
+            "role": user.role,
+        }
+        response = JsonResponse(response_data)
+        
+        # Set the cookie with the custom token (make it HttpOnly for security)
+        response.set_cookie("auth", custom_token, httponly=True, secure=False, samesite='Lax')
+        
         return response
