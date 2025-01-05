@@ -1,6 +1,6 @@
 import { useState } from "react";
 import api from "../../utils/api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   // States for user profile
@@ -13,7 +13,7 @@ export default function Login() {
   const [error, setError] = useState(false);
   const [isMentor, setIsMentor] = useState(true);
 
-
+  const navigate = useNavigate();
 
   // Handling input change
   const handleProfile = (e) => {
@@ -38,14 +38,17 @@ export default function Login() {
       .post(`${baseUrl}/token/`, formData)
       .then(function (response) {
         const token = response.data.access; // Extract token
+        const role = response.data.role;
         console.log("Login successful, token:", token);
+        console.log("Login successful, role:", role);
 
         // Store the token in localStorage
+        localStorage.setItem("role", role);
         localStorage.setItem("authToken", token);
         // Redirect to Dashboard and reload the page
         if (isMentor) {
-          localStorage.removeItem("authToken");
           console.log("Hello Mentor")
+          navigate('/mentor/portal')
         } else {
           window.location.reload();
         }
@@ -137,7 +140,7 @@ export default function Login() {
           <div className="flex justify-center gap-4 my-4">
             <button
               className={`px-4 py-2 font-medium ${
-                isMentor ? "bg-indigo-600 text-white" : "bg-gray-200"
+                isMentor ? "bg-indigo-600 text-white dark:bg-indigo-600 dark:text-white" : "bg-gray-200 dark:bg-gray-700 dark:text-white"
               } rounded`}
               onClick={() => {setIsMentor(true);console.log(isMentor);}}
             >
@@ -145,7 +148,7 @@ export default function Login() {
             </button>
             <button
               className={`px-4 py-2 font-medium ${
-                !isMentor ? "bg-indigo-600 text-white" : "bg-gray-200"
+                !isMentor ? "bg-indigo-600 text-white dark:bg-indigo-600 dark:text-white" : "bg-gray-200 dark:bg-gray-700 dark:text-white"
               } rounded`}
               onClick={() => {setIsMentor(false);console.log(isMentor);}}
             >

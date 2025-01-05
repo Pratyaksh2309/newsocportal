@@ -10,6 +10,7 @@ function Logout() {
                 console.log(res.data);
                 window.location.reload();
                 localStorage.removeItem('authToken');
+                localStorage.removeItem('role');
                 navigate('/login')
                 
             })
@@ -17,6 +18,7 @@ function Logout() {
                 console.log(err);
                 window.location.reload();
                 localStorage.removeItem('authToken');
+                localStorage.removeItem('role');
                 navigate('/login')
               
             })

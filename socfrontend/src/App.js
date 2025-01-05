@@ -23,6 +23,8 @@ import PreferenceFormFilled from "./mentee/pages/PreferenceFormFilled";
 import api from "./utils/api";
 import Wishlist from "./mentee/pages/Wishlist";
 import Home from "./mentee/pages/Home";
+import MentorPortal from "./mentor/MentorPortal";
+import MenteeList from "./mentor/MenteeList";
 
 export default function App() {
   const [authToken, setAuthToken] = useState(null);
@@ -83,6 +85,8 @@ export default function App() {
               path="/PreferenceFormFilled"
               element={<PreferenceFormFilled />}
             />
+            <Route path="/mentor/portal" element={<MentorPortal />} />
+            <Route path="/mentor/mentees_list" element={<MenteeList />} />
             <Route path="/logout" element={<Logout />} />
           </Route>
         </Routes>

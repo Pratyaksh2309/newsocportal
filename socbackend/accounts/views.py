@@ -232,7 +232,8 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         print(user.is_active)
 
         # Call the parent class to obtain the JWT token (after authentication)
-        custom_token = secrets.token_urlsafe(16)  # Generate a secure random token
+        random_token = secrets.token_urlsafe(16)  # Generates a secure random string of 16 characters
+        custom_token = f"{user.id}-{random_token}"
 
         # Optionally store the token in a model for later validation or expiration
         # Example: store token in a custom model for tracking
@@ -246,6 +247,17 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         response = JsonResponse(response_data)
         
         # Set the cookie with the custom token (make it HttpOnly for security)
-        response.set_cookie("auth", custom_token, httponly=True, secure=False, samesite='Lax')
+        # response.set_cookie(
+        #         key=SIMPLE_JWT["AUTH_COOKIE"], value=custom_token, httponly=True
+        #     )
+
+        response.set_cookie(
+            key="auth", 
+            value=custom_token, 
+            httponly=True, 
+        )
+        
+        # Log cookie settings for debugging
+        print(f"Cookie set with value: {custom_token}")
         
         return response

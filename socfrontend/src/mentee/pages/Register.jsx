@@ -200,7 +200,7 @@ export default function Register() {
           <div className="flex justify-center gap-4 my-4">
             <button
               className={`px-4 py-2 font-medium ${
-                isMentor ? "bg-indigo-600 text-white" : "bg-gray-200"
+                isMentor ? "bg-indigo-600 text-white dark:bg-indigo-600 dark:text-white" : "bg-gray-200 dark:bg-gray-700 dark:text-white"
               } rounded`}
               onClick={() => {setIsMentor(true);}}
             >
@@ -208,7 +208,7 @@ export default function Register() {
             </button>
             <button
               className={`px-4 py-2 font-medium ${
-                !isMentor ? "bg-indigo-600 text-white" : "bg-gray-200"
+                !isMentor ? "bg-indigo-600 text-white dark:bg-indigo-600 dark:text-white" : "bg-gray-200 dark:bg-gray-700 dark:text-white"
               } rounded`}
               onClick={() => {setIsMentor(false);}}
             >

@@ -4,7 +4,7 @@ from .models import Project
 from .serializers import ProjectSerializer, BasicProjectSerializer, MenteePreferenceSerializer, MenteePreferenceSaveSerializer
 
 # from projects.models import Season
-from accounts.custom_auth import CookieJWTAuthentication
+from accounts.new import CookieJWTAuthentication2
 from rest_framework import generics, views
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -31,12 +31,12 @@ class ProjectDetailView(APIView):
     
 
 class ProjectWishlist(APIView):
-  #  authentication_classes  = [CookieJWTAuthentication]
+    authentication_classes  = [CookieJWTAuthentication2]
     permission_classes = [IsAuthenticated]
     permission_classes = [AllowAny]  # Allow any user to access the post request
 
     def get(self, request):
-        user_profile = UserProfile.objects.get(user=request.user[0])
+        user_profile = UserProfile.objects.get(user=request.user)
         
         # logger.error('\n \n Error 1 \n \n ')
         mentee = Mentee.objects.get(user=user_profile)
@@ -51,8 +51,8 @@ class ProjectWishlist(APIView):
     
     def post(self, request):
         # logger.error('\n \n Error 6 \n \n ')
-
-        user_profile = UserProfile.objects.get(user=request.user[0])
+        print("Request Data:", request.user)
+        user_profile = UserProfile.objects.get(user=request.user)
 
         # logger.error('\n \n Error 7 \n \n ')
         mentee = Mentee.objects.get(user=user_profile)
@@ -68,7 +68,7 @@ class ProjectWishlist(APIView):
         return Response({"message": "Project added to wishlist."})
     
     def delete(self, request):
-        user_profile = UserProfile.objects.get(user=request.user[0])
+        user_profile = UserProfile.objects.get(user=request.user)
         mentee = Mentee.objects.get(user=user_profile)
         project_id = request.GET['project_id']
         project = Project.objects.get(pk=project_id)
@@ -77,19 +77,19 @@ class ProjectWishlist(APIView):
         return Response({"message": "Project removed from wishlist."})
     
 class ProjectPreference(APIView):
-    authentication_classes  = [CookieJWTAuthentication]
+    authentication_classes  = [CookieJWTAuthentication2]
     permission_classes = [IsAuthenticated]
     permission_classes = [AllowAny]  # Allow any user to access the post request
 
     def get(self, request):
-        user_profile = UserProfile.objects.get(user=request.user[0])
+        user_profile = UserProfile.objects.get(user=request.user)
         mentee = Mentee.objects.get(user=user_profile)
         preferences = MenteePreference.objects.filter(mentee=mentee)
         serializer = MenteePreferenceSerializer(preferences, many=True)
         return Response(serializer.data)
     
     def post(self, request):
-        user_profile = UserProfile.objects.get(user=request.user[0])
+        user_profile = UserProfile.objects.get(user=request.user)
         mentee = Mentee.objects.get(user=user_profile)
         project_id = request.data["project"]
         preference = request.data["preference"]
@@ -102,7 +102,7 @@ class ProjectPreference(APIView):
         return Response(serializer.errors, status=400)
     
     def delete(self, request):
-        user_profile = UserProfile.objects.get(user=request.user[0])
+        user_profile = UserProfile.objects.get(user=request.user)
         mentee = Mentee.objects.get(user=user_profile)
         project_id = request.data["project_id"]
         project = Project.objects.get(pk=project_id)
